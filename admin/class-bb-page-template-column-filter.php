@@ -142,9 +142,26 @@ class Bb_Page_Template_Column_Admin_Filter {
 	  return $query;
 	}
 
-	//Add Custom Field meta to search
+	//Add Custom Field meta to search.
 	function bbptc_custom_query_vars_filter( $vars ) {
 	  $vars[] .= 'current_page_template_name';
 	  return $vars;
+	}
+
+	//Alter Page search query to add custom field meta to query string.
+	function bbptc_alter_query( $query ) {
+
+	  if ( !is_admin() || 'page' != $query->query['post_type'] ){
+	    return;
+	  }
+
+	  if( !(isset($_REQUEST['current_page_template_name']) ) ){
+	    return;
+	  }
+
+	  if ( $query->query_vars['current_page_template_name'] ) {
+	      $query->set( 'meta_key', 'current_page_template_name' );
+	      $query->set( 'meta_value', $query->query_vars['current_page_template_name'] );
+	  }
 	}
 }
