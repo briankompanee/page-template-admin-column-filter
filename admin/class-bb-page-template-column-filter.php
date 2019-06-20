@@ -164,4 +164,13 @@ class Bb_Page_Template_Column_Admin_Filter {
 	      $query->set( 'meta_value', $query->query_vars['current_page_template_name'] );
 	  }
 	}
+
 }
+//Execute Filters and Actions in order as needed.
+$BbptcFilterClass = new Bb_Page_Template_Column_Admin_Filter( $this->plugin_name, $this->version );
+add_filter( 'manage_pages_columns', array($BbptcFilterClass,'bbptc_pages_columns') );
+add_action( 'manage_pages_custom_column', array($BbptcFilterClass,'bbptc_page_column_content'), 10, 2 );
+add_action('restrict_manage_posts', array($BbptcFilterClass,'page_template_filtering'), 10);
+add_filter( 'parse_query', array($BbptcFilterClass,'filter_request_query'), 10);
+add_filter( 'query_vars', array($BbptcFilterClass,'bbptc_custom_query_vars_filter') );
+add_action( 'pre_get_posts', array($BbptcFilterClass,'bbptc_alter_query') );
