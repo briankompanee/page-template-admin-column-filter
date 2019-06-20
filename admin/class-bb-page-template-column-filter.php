@@ -57,4 +57,25 @@ class Bb_Page_Template_Column_Admin_Filter {
 
 		return $columns;
 	}
+
+	//Retrieve current page template slugs in theme and show nice names.
+	function bbptc_page_column_content( $column_name, $post_id ) {
+		if ( $column_name == 'page-template-current' ) {
+
+			if ( $post_id ) {
+				$available_templates = wp_get_theme()->get_page_templates();
+				$page_template_current = get_post_meta( $post_id, '_wp_page_template', true );
+				$current_template_name = '';
+
+				if (! $page_template_current || 'default' == $page_template_current ) {
+					$current_template_name = 'Default Template';
+				} else {
+					$current_template_name = $available_templates[$page_template_current];
+				}
+
+				update_post_meta( $post_id, 'current_page_template_name', $current_template_name );
+				echo get_post_meta( $post_id, 'current_page_template_name', $current_template_name );
+			}
+		}
+	}
 }
