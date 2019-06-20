@@ -78,4 +78,42 @@ class Bb_Page_Template_Column_Admin_Filter {
 			}
 		}
 	}
+
+	//Create the admin drop down filter and add template selections
+	function page_template_filtering( $post_type ){
+	  if('page' !== $post_type){
+	    return; //filter your post
+	  }
+
+	  //Create the selector
+	  $selected = '';
+	  $request_attr = 'current_page_template_name';
+
+	  if ( isset($_REQUEST[$request_attr]) ) {
+	    $selected = $_REQUEST[$request_attr];
+	  }
+
+	  //get unique values of the meta field to filer by.
+	  $meta_key = 'current_page_template_name';
+	  global $wpdb;
+	  $results = $wpdb->get_col(
+	      $wpdb->prepare( "
+	          SELECT DISTINCT pm.meta_value FROM {$wpdb->postmeta} pm
+	          LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+	          WHERE pm.meta_key = '%s'
+	          AND p.post_status IN ('publish', 'draft')
+	          ORDER BY pm.meta_value",
+	          $meta_key
+	      )
+	  );
+
+	 //build a custom dropdown list of values to filter by
+	  echo '<select id="current_page_template_name" name="current_page_template_name">';
+	  echo '<option value="0">' . __( 'Show all Page Templates', 'bb-page-template-column' ) . ' </option>';
+	  foreach($results as $current_page_template_name){
+	    $select = ($current_page_template_name == $selected) ? ' selected="selected"':'';
+	    echo '<option value="'.$current_page_template_name.'"'.$select.'>' . $current_page_template_name . ' </option>';
+	  }
+	  echo '</select>';
+	}
 }
