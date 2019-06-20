@@ -48,4 +48,13 @@ class Bb_Page_Template_Column_Admin_Filter {
 
 	}
 
+	//Add a page template admin column to the pages list view 
+	function bbptc_pages_columns( $columns ) {
+		$BbptcCustomColumns = array(
+			'page-template-current' => __( 'Page Template', 'bb-page-template-column' )
+		);
+		$columns = array_merge( $columns, $BbptcCustomColumns );
+
+		return $columns;
+	}
 }
