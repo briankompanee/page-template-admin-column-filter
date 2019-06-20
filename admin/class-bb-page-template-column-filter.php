@@ -117,7 +117,7 @@ class Bb_Page_Template_Column_Admin_Filter {
 	  echo '</select>';
 	}
 
-	//Modify the dropdown filter query for the page templates custom field
+	//Modify the dropdown filter query for the page templates custom field.
 	function filter_request_query( $query ){
 
 	  if( !(is_admin() AND $query->is_main_query()) ){
@@ -132,7 +132,7 @@ class Bb_Page_Template_Column_Admin_Filter {
 	    return $query;
 	  }
 
-	 //modify the query_vars and com and compare custom field vaule to drop down selected field
+	 //modify the query_vars and com and compare custom field vaule to drop down selected field.
 	  $query->query_vars = array(array(
 	    'field' => 'current_page_template_name',
 	    'value' => $_REQUEST['current_page_template_name'],
@@ -140,5 +140,11 @@ class Bb_Page_Template_Column_Admin_Filter {
 	    'type' => 'CHAR'
 	  ));
 	  return $query;
+	}
+
+	//Add Custom Field meta to search
+	function bbptc_custom_query_vars_filter( $vars ) {
+	  $vars[] .= 'current_page_template_name';
+	  return $vars;
 	}
 }
